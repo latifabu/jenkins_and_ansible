@@ -49,12 +49,16 @@ Installing ansible and configuring ansible on Master instance.
 - `exit` 
 - `sudo apt-get install python3-pip -y`
 - `sudo pip3 install awscli boto3 boto3`
+
 Alternative method to install boto:
 - `sudo su jenkins`
 - `pip3 show boto`
 - `pip3 install boto`
 - enter `python`
 - then after `>>>` enter `import boto`
+Example:
+
+<img width="373" alt="image" src="https://user-images.githubusercontent.com/98215575/155805035-b4fff6e0-6e8a-45b0-bb47-b44b351d59fa.png">
 
 
 Enter python
