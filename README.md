@@ -22,3 +22,4 @@
 -  `sudo systemctl start jenkins`
 - Open browser, copy instance IP and add `port 8080`
   
+  ![Jenkins password](https://user-images.githubusercontent.com/98215575/155801661-f6d5b10b-209a-4dd5-a4e0-cae312a00d8d.png)
