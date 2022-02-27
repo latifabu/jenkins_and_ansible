@@ -106,6 +106,7 @@ Two changes were made to our usual playbook to make it run on jenkins.
 Under `vars`
 - the `ansible_python_interpreter: /usr/bin/python3` was added so python3 acted as an interpreter for ansible
 - And the last line: `tags: ['never', 'create_ec2']` without this line the instance will not launch
+- Playbooks run by jenkins cannot have two commands on one line.
 `
 ```
 ---
@@ -135,7 +136,7 @@ Under `vars`
       wait: yes
       group: "{{ec2_sg_name}}"
       region: "eu-west-1"
-      count: 1
+      count: 1    # number of instances created
       vpc_subnet_id: subnet-xxxxxxxx
       assign_public_ip: yes
       instance_tags:
@@ -238,8 +239,35 @@ Job that will set up app
 
 - <img width="664" alt="image" src="https://user-images.githubusercontent.com/98215575/155879901-ac591852-ef92-4b3f-b2b6-effdac296ab2.png">
 
+- Same yml file used to set up mongodb as before:
 
+```
+---
+- hosts: db
+  gather_facts: yes
+  become: true
+# install mongodb in db instance and ensure it's running
+  tasks:
+  - name: installing mongo pre-requisites
+    apt: pkg=mongodb state=present update_cache=yes
+  - name: allow 0.0.0.0
+    ansible.builtin.lineinfile:
+      path: /etc/mongodb.conf
+      regexp: '^bind_ip = '
+      insertafter: '^#bind_ip = '
+      line: bind_ip = 0.0.0.0
+  - name: restart and enable mongod
+    service: name=mongodb state=restarted enabled=yes
+
+```
 Run the job
 
+- Run the playbook that create DB_Host env var
+- Run the playbooks that source .bashrc
+- enter app instance and start the app
+- you will see app running and `/posts`
+
 Blockers:
-- Jenkins
+- Ansible playbook execution failed
+- Even though the python interpreter was correct
+- Created a new master node and installed everything again following the steps above
