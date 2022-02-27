@@ -1,5 +1,8 @@
 # Jenkins and Ansible
 
+<img width="628" alt="image" src="https://user-images.githubusercontent.com/98215575/155881486-c7ceff43-2fcc-4e3d-8410-11cb97f639b5.png">
+
+
 1) Create master Jenkins instance on AWS
   - Select create instance
   - Select your VPC
