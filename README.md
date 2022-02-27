@@ -40,6 +40,8 @@ Open browser, copy instance IP and add `port 8080`
 - Then the `available` tab
 - Search for `EC2`, `Ansible`, `YAML`
 - Select and `install plugins without restart`
+- Return to manage Jenkins
+- 
 
 Installing ansible and configuring ansible on Master instance.
 - Enter `sudo apt install python3.9 -y`
@@ -72,7 +74,7 @@ Enter python
 - `sudo chown jenkins:jenkins pass.yml` - this will give jenkins permission to access to pass.yml
 - `ansible-galaxy collection install amazon.aws`
 - `scp -i "~/.ssh/keyname.pem" -r app/ ubuntu@ipaddress:~ ` to copy app from an instance
-- or `git clone <link of relevant app>
+- or `git clone <github link which contains app>`
 - `sudo su jenkins` 
 - `cd ~`
 - `mkdir .ssh` if `.ssh` is not present
@@ -82,7 +84,14 @@ Enter python
 - `cd /etc/ansible` 
 - create ec2_instance with:
 - `sudo nano <name>>.yml`
-- 
+
+
+
+Two changes were made to our usual playbook to make it run on jenkins.
+Under `vars`
+- the `ansible_python_interpreter: /usr/bin/python3` was added so python3 acted as an interpreter for ansible
+- And the last line: `tags: ['never', 'create_ec2']` without this line the instance will not launch
+`
 ```
 ---
 - hosts: localhost
@@ -119,6 +128,8 @@ Enter python
   tags: ['never', 'create_ec2']
 
 ``` 
+Now return to Jenkins and create a job that launches the playbook:
+
 
 
 
@@ -170,3 +181,5 @@ Once on AWS copy ip, to hosts file
 
 ```
 
+Blockers:
+- Jenkins
