@@ -37,13 +37,28 @@ Open browser, copy instance IP and add `port 8080`
 - Enter a username, password, name and e-mail
 - Once done select `manage jenkins`
 - `manage plugins`
+
+<img width="966" alt="image" src="https://user-images.githubusercontent.com/98215575/155878712-f275c6fa-db90-4fab-afc7-9a5a4fb1f43f.png">
+
+
 - Then the `available` tab
+
+<img width="675" alt="image" src="https://user-images.githubusercontent.com/98215575/155878731-71a6371c-44c1-4884-a22e-4a46c20db3b9.png">
+
 - Search for `EC2`, `Ansible`, `YAML`
 - Select and `install plugins without restart`
-- Return to manage Jenkins
-- 
+- Return to manage Jenkins and select `Global Tool Configuration`
+
+<img width="956" alt="image" src="https://user-images.githubusercontent.com/98215575/155878769-13e12a3d-4682-4703-8df3-bdc34211d8a2.png">
+
+- Then scroll and enter
+
+<img width="685" alt="image" src="https://user-images.githubusercontent.com/98215575/155878838-45446668-9f1b-479e-8d19-f952adcfa952.png">
+
+
 
 Installing ansible and configuring ansible on Master instance.
+- Return to terminal
 - Enter `sudo apt install python3.9 -y`
 - `sudo su` - to run as root
 - `update-alternatives --install /usr/bin/python python /usr/bin/python3 1`
@@ -130,11 +145,30 @@ Under `vars`
 ``` 
 Now return to Jenkins and create a job that launches the playbook:
 
+- Scroll to and enter
+- Playbook path to yml file
 
+![image](https://user-images.githubusercontent.com/98215575/155879112-37706bb0-8060-4639-8bbb-02f4e57bc388.png)
 
+- Under `Vault Credentials` select `add`
+- Select `secret text`
+- Enter vault password in the `secret field`
+- add a description
 
+![image](https://user-images.githubusercontent.com/98215575/155879163-4c1e1671-56ba-4677-8dac-9f51eaff183f.png)
 
-Once on AWS copy ip, to hosts file
+- Scroll to `advanced`
+
+<img width="654" alt="image" src="https://user-images.githubusercontent.com/98215575/155879316-6c5b0042-543e-4baf-8f6a-49998a0f0ca5.png">
+
+- Enter the following
+
+![image](https://user-images.githubusercontent.com/98215575/155879340-8e49c595-f251-42d7-b401-be6301746c27.png)
+
+- Appy and save
+- Build the job
+
+Once on AWS copy ip of instances and add to the to hosts file
 ```
 [app]
 34.xxx.xxx.xxx ssh_connection=ssh ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/<private_key>
@@ -143,8 +177,24 @@ Once on AWS copy ip, to hosts file
 18.xxx.xxx.xxx ssh_connection=ssh ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/<private_key>
 
 ```
+Test connection with ping
+- To ping you must have jenkins as the root
 
-- start_app.yml
+![image](https://user-images.githubusercontent.com/98215575/155879424-a546bfb3-989d-4c55-89ba-fc85dd571122.png)
+
+- Create two more jobs 
+- One to run the playbook to set up the app 
+- Another to run the playbook that sets up db
+
+Job that will set up app
+
+![image](https://user-images.githubusercontent.com/98215575/155879710-ef029fb4-04e5-48fa-b426-22acc0c21f3a.png)
+
+<img width="695" alt="image" src="https://user-images.githubusercontent.com/98215575/155879740-88eec3f4-fc83-490c-81c2-254a13d721d4.png">
+
+<img width="680" alt="image" src="https://user-images.githubusercontent.com/98215575/155879799-eadd0ec4-f667-430f-9770-eda9d4fea877.png">
+
+- start_app.yml looked like:
 ```
 ---
 - hosts: app
@@ -180,6 +230,16 @@ Once on AWS copy ip, to hosts file
        line: 'export DB_HOST=mongodb://<db_ip>:27017/posts'
 
 ```
+- Job that sets up db
+
+![image](https://user-images.githubusercontent.com/98215575/155879879-42d6573c-fcd7-4826-8fc7-7ab9cb2d8cc4.png)
+
+- Like the previous job, select advance
+
+- <img width="664" alt="image" src="https://user-images.githubusercontent.com/98215575/155879901-ac591852-ef92-4b3f-b2b6-effdac296ab2.png">
+
+
+Run the job
 
 Blockers:
 - Jenkins
